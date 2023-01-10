@@ -65,7 +65,7 @@ for x in fpContent:
         cust_no = cust_no.strip().replace('"', '')
         cust_no = cust_no.replace('}', '')
         write_ws.append(
-            ['', tran_ymd, req_dt, f'=VLOOKUP(E{row_cnt}, Sheet2!A2:B41262, 2, FALSE)', cust_no])
+            ['', tran_ymd, req_dt, f'=VLOOKUP(E{row_cnt}, Sheet2!A2:B41781, 2, FALSE)', cust_no])
 
 fp.close
 

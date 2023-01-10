@@ -46,22 +46,30 @@ fpContent = fp.readlines()
 for x in fpContent:
     if 'STORE_CD=30507' in x:
         if '이미 사용된 코드 입니다' not in x:
-            req_dt_index = x.find('REQ_DT=')
-            # 날짜
-            tran_ymd_st_index = req_dt_index + 7
-            tran_ymd_ed_index = tran_ymd_st_index + 8
-            tran_ymd = x[tran_ymd_st_index:tran_ymd_ed_index]
-            # 시분초
-            req_dt_st_index = req_dt_index + 15
-            req_dt_ed_index = req_dt_st_index + 6
-            req_dt = x[req_dt_st_index:req_dt_ed_index]
-            # 고객명
-            cust_nm_index = x.find('CUST_NM') + 12
-            cust_nm = x[cust_nm_index:]
-            cust_nm = cust_nm.strip().replace('"', '')
-            cust_nm = cust_nm.replace('}', '')
-            write_ws.append(['', tran_ymd, req_dt, cust_nm])
-            # print(tran_ymd, ', ', req_dt, ', ', cust_nm)
+            if 'QR 코드가 정확하지 않습니다' not in x:
+                if '정상적으로 생성한 코드가 아닙니다' not in x:
+                    req_dt_index = x.find('REQ_DT=')
+                    # 날짜
+                    tran_ymd_st_index = req_dt_index + 7
+                    tran_ymd_ed_index = tran_ymd_st_index + 8
+                    tran_ymd = x[tran_ymd_st_index:tran_ymd_ed_index]
+                    # 시분초
+                    req_dt_st_index = req_dt_index + 15
+                    req_dt_ed_index = req_dt_st_index + 6
+                    req_dt = x[req_dt_st_index:req_dt_ed_index]
+                    # 고객명
+                    cust_nm_index = x.find('CUST_NM') + 12
+                    cust_nm = x[cust_nm_index:]
+                    cust_nm = cust_nm.strip().replace('"', '')
+                    cust_nm = cust_nm.replace('}', '')
+                    # 고객ID
+                    # cust_id_index = x.find('CUST_ID') + 12
+                    # cust_id_ed_index = cust_id_index + 9
+                    # cust_id = x[cust_id_index:cust_id_ed_index]
+                    # cust_id = cust_id.strip().replace('"', '')
+                    # write_ws.append([cust_id, tran_ymd, req_dt, cust_nm, x])
+                    write_ws.append(['', tran_ymd, req_dt, cust_nm])
+                    # print(tran_ymd, ', ', req_dt, ', ', cust_nm)
 
 fp.close
 write_wb.save(
