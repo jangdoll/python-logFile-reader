@@ -3,6 +3,7 @@ import datetime
 import sys
 from tempfile import TemporaryFile
 from openpyxl import Workbook
+from openpyxl.styles import PatternFill, Border, Side
 
 st_dt = sys.argv[1]
 ed_dt = sys.argv[2]
@@ -37,9 +38,18 @@ for x in date_list:
 write_wb = Workbook()
 # Sheet1에다 입력
 write_ws = write_wb.active
+write_ws.column_dimensions['B'].width = 14.5
+write_ws.column_dimensions['C'].width = 14.5
+write_ws.column_dimensions['D'].width = 14.5
 write_ws['B2'] = '날짜'
 write_ws['C2'] = '시분초'
 write_ws['D2'] = '고객명'
+write_ws['B2'].fill = PatternFill(
+    start_color='D9E1F2', fill_type='solid')  # 배경색 추가
+write_ws['C2'].fill = PatternFill(
+    start_color='D9E1F2', fill_type='solid')  # 배경색 추가
+write_ws['D2'].fill = PatternFill(
+    start_color='D9E1F2', fill_type='solid')  # 배경색 추가
 
 fp.seek(0)
 fpContent = fp.readlines()
@@ -71,7 +81,27 @@ for x in fpContent:
                     write_ws.append(['', tran_ymd, req_dt, cust_nm])
                     # print(tran_ymd, ', ', req_dt, ', ', cust_nm)
 
+columns = ['B', 'C', 'D']
+
+for x in range(2, write_ws.max_row+1):
+    for y in columns:
+        write_ws[f'{y}{x}'].border = Border(left=Side(style="thin", color="000000"),
+                                            right=Side(
+            style='thin', color="000000"),
+            top=Side(
+            style="thin", color="000000"),
+            bottom=Side(
+            style="thin", color="000000"),
+            diagonal=Side(
+            style="thin", color="000000"),
+            diagonal_direction=0,
+            outline=Side(
+            style="thin", color="000000"),
+            vertical=Side(
+            style="thin", color="000000"),
+            horizontal=Side(style="thin", color="000000"))
+
 fp.close
 write_wb.save(
-    f'./result/무인점포_입장이력_삼성병원2호점_{(datetime.date.today().strftime("%Y%m%d"))}.xlsx')
+    f'./result_entry/무인점포_입장이력_삼성병원2호점_{(datetime.date.today().strftime("%Y%m%d"))}.xlsx')
 print((f'무인점포_입장이력_삼성병원2호점_{(datetime.date.today().strftime("%Y%m%d"))}.xlsx'))

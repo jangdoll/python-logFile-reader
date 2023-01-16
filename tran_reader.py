@@ -4,6 +4,7 @@ import sys
 from tempfile import TemporaryFile
 from openpyxl import Workbook
 from openpyxl import load_workbook
+from openpyxl.styles import PatternFill, Border, Side
 
 st_dt = sys.argv[1]
 ed_dt = sys.argv[2]
@@ -39,9 +40,18 @@ for x in date_list:
 write_wb = Workbook()
 # Sheet1에다 입력
 write_ws = write_wb.active
+write_ws.column_dimensions['B'].width = 14.5
+write_ws.column_dimensions['C'].width = 14.5
+write_ws.column_dimensions['D'].width = 14.5
 write_ws['B2'] = '날짜'
 write_ws['C2'] = '시분초'
 write_ws['D2'] = '고객명'
+write_ws['B2'].fill = PatternFill(
+    start_color='D9E1F2', fill_type='solid')  # 배경색 추가
+write_ws['C2'].fill = PatternFill(
+    start_color='D9E1F2', fill_type='solid')  # 배경색 추가
+write_ws['D2'].fill = PatternFill(
+    start_color='D9E1F2', fill_type='solid')  # 배경색 추가
 
 fp.seek(0)
 fpContent = fp.readlines()
@@ -67,6 +77,28 @@ for x in fpContent:
         write_ws.append(
             ['', tran_ymd, req_dt, f'=VLOOKUP(E{row_cnt}, Sheet2!A2:B41781, 2, FALSE)', cust_no])
 
+write_ws.column_dimensions['E'].hidden = True
+
+columns = ['B', 'C', 'D']
+
+for x in range(2, write_ws.max_row+1):
+    for y in columns:
+        write_ws[f'{y}{x}'].border = Border(left=Side(style="thin", color="000000"),
+                                            right=Side(
+            style='thin', color="000000"),
+            top=Side(
+            style="thin", color="000000"),
+            bottom=Side(
+            style="thin", color="000000"),
+            diagonal=Side(
+            style="thin", color="000000"),
+            diagonal_direction=0,
+            outline=Side(
+            style="thin", color="000000"),
+            vertical=Side(
+            style="thin", color="000000"),
+            horizontal=Side(style="thin", color="000000"))
+
 fp.close
 
 write_ws2 = write_wb.create_sheet('Sheet2', 1)
@@ -77,5 +109,5 @@ for row in tmp_sheet:
     write_ws2.append([row[0].value, row[1].value, row[2].value, row[3].value])
 
 write_wb.save(
-    f'./result/무인점포_구매이력_삼성병원2호점_{(datetime.date.today().strftime("%Y%m%d"))}.xlsx')
+    f'./result_tran/무인점포_구매이력_삼성병원2호점_{(datetime.date.today().strftime("%Y%m%d"))}.xlsx')
 print((f'무인점포_구매이력_삼성병원2호점_{(datetime.date.today().strftime("%Y%m%d"))}.xlsx'))
